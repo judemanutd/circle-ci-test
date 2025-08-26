@@ -1,28 +1,30 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@7.1.1
-  circleci-cli: circleci/circleci-cli@0.1.9
-
-jobs:
-  test:
+executors:
+  node-postgres:
     docker:
-      - image: cimg/node:18.16-browsers
+      - image: cimg/node:22.18.0
+        environment:
+          NODE_ENV: test
+    working_directory: ~/workspace
     resource_class: large
+
+commands:
+  # STEP 1: Install system dependencies
+  install-system-deps:
     steps:
-      - checkout
-
       - run:
-          name: Install dependencies
-          command: npm ci
-
-      # Install Playwright browsers
-      - run:
-          name: Install Playwright Browsers
+          name: Install other system dependencies
           command: |
-            npx playwright install --with-deps
+            sudo apt-get update
+            sudo apt-get install -y curl jq
+            sudo npm install -g pnpm
+            pnpm install --frozen-lockfile
+            npx playwright install --with-deps chromium
 
-      # Run Playwright tests with Circle CI test splitting
+  # STEP 7: Start Playwright tests
+  start-tests:
+    steps:
       - run:
           name: Run Playwright Tests
           command: |
@@ -31,6 +33,14 @@ jobs:
             echo "$TESTFILES" | circleci tests run --command="xargs npx playwright test --reporter=junit" --verbose --split-by=timings
           # Continue even if tests fail so we can collect artifacts
           when: always
+
+jobs:
+  setup-and-test:
+    executor: node-postgres
+    steps:
+      - checkout
+      - install-system-deps
+      - start-tests
 
       # Store test results (XML format for CircleCI test summary)
       - store_test_results:
@@ -47,6 +57,6 @@ jobs:
           destination: test-results
 
 workflows:
-  test-workflow:
+  build-and-test:
     jobs:
-      - test
+      - setup-and-test
