@@ -1,0 +1,28 @@
+{
+  "name": "playwright-circleci-starter",
+  "version": "1.0.0",
+  "description": "Playwright starter project with Circle CI integration and reporting",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:failed": "playwright test --last-failed",
+    "test:rerun": "playwright test --last-failed",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install --with-deps"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "keywords": [
+    "playwright",
+    "testing",
+    "e2e",
+    "circleci"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
+  }
+}

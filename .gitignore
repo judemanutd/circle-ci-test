@@ -1,0 +1,29 @@
+# Playwright Test Results
+test-results/
+playwright-report/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Package manager lockfiles (keep pnpm-lock.yaml for reproducible builds)
+# pnpm-lock.yaml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Coverage reports
+coverage/
