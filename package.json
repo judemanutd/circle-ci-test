@@ -13,7 +13,6 @@
     "report": "playwright show-report",
     "install:browsers": "playwright install --with-deps"
   },
-  "packageManager": "pnpm@8.15.0",
   "keywords": [
     "playwright",
     "testing",
