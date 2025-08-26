@@ -31,7 +31,7 @@ commands:
             | circleci tests split --split-by=timings \
             | circleci tests run \
                 --verbose \
-                --command="xargs -n 25 pnpm exec playwright test -c=playwright.config.js"
+                --command="xargs -n 25 pnpm exec playwright test -c playwright.config.js"
           when: always
 
 jobs:
