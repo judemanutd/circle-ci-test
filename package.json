@@ -13,15 +13,10 @@
     "report": "playwright show-report",
     "install:browsers": "playwright install --with-deps"
   },
-  "keywords": [
-    "playwright",
-    "testing",
-    "e2e",
-    "circleci"
-  ],
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.44.0"
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.0"
   }
 }

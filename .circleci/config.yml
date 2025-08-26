@@ -1,7 +1,8 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.1.0
+  node: circleci/node@7.1.1
+  circleci-cli: circleci/circleci-cli@0.1.9
 
 jobs:
   test:
@@ -27,7 +28,7 @@ jobs:
           command: |
             mkdir -p test-results
             TESTFILES=$(circleci tests glob "tests/**/*.spec.js")
-            echo "$TESTFILES" | circleci tests run --command="xargs npm playwright test --reporter=junit" --verbose --split-by=timings
+            echo "$TESTFILES" | circleci tests run --command="xargs npx playwright test --reporter=junit" --verbose --split-by=timings
           # Continue even if tests fail so we can collect artifacts
           when: always
 

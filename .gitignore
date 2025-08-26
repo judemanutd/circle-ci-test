@@ -27,3 +27,8 @@ Thumbs.db
 
 # Coverage reports
 coverage/
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
