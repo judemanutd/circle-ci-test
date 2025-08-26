@@ -11,21 +11,16 @@ jobs:
     steps:
       - checkout
 
-      # Install dependencies
-      - run:
-          name: Install pnpm
-          command: npm install -g pnpm
-
       - run:
           name: Install dependencies
-          command: pnpm install --frozen-lockfile
+          command: npm ci
 
       # Install Playwright browsers
       - run:
           name: Install Playwright Browsers
           command: |
             npx playwright install --with-deps
-            pnpm install:browsers
+            npm install:browsers
 
       # Run Playwright tests with Circle CI test splitting
       - run:
@@ -33,7 +28,7 @@ jobs:
           command: |
             mkdir -p test-results
             TESTFILES=$(circleci tests glob "tests/**/*.spec.js")
-            echo "$TESTFILES" | circleci tests run --command="xargs pnpm playwright test --reporter=junit" --verbose --split-by=timings
+            echo "$TESTFILES" | circleci tests run --command="xargs npm playwright test --reporter=junit" --verbose --split-by=timings
           # Continue even if tests fail so we can collect artifacts
           when: always
 
