@@ -40,7 +40,6 @@ jobs:
     steps:
       - checkout
       - install-system-deps
-      - ensure-reporters
       - start-tests
 
       # CircleCI expects a DIRECTORY here; it will find junit.xml inside.
