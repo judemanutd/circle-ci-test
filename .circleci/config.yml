@@ -1,60 +1,59 @@
 version: 2.1
 
 executors:
-  node-postgres:
+  node-playwright:
     docker:
-      - image: cimg/node:22.18.0
+      - image: cimg/node:22.18-browsers
         environment:
           NODE_ENV: test
     working_directory: ~/workspace
     resource_class: large
 
 commands:
-  # STEP 1: Install system dependencies
+  # Install deps and Playwright browsers using the local CLI
   install-system-deps:
     steps:
       - run:
-          name: Install other system dependencies
+          name: Install dependencies & Playwright browsers
           command: |
-            sudo apt-get update
-            sudo apt-get install -y curl jq
             sudo npm install -g pnpm
             pnpm install --frozen-lockfile
-            npx playwright install --with-deps chromium
+            pnpm exec playwright install --with-deps chromium
 
-  # STEP 7: Start Playwright tests
+  # Run tests in a way that supports CircleCI's "Rerun failed tests" feature
   start-tests:
     steps:
       - run:
-          name: Run Playwright Tests
+          name: Run Playwright Tests (split + rerun-compatible)
           command: |
             mkdir -p test-results
-            TESTFILES=$(circleci tests glob "tests/**/*.spec.js")
-            echo "$TESTFILES" | circleci tests run --command="xargs npx playwright test --reporter=junit" --verbose --split-by=timings
-          # Continue even if tests fail so we can collect artifacts
+            circleci tests glob "tests/**/*.{spec,test}.{js,jsx,ts,tsx}" \
+            | circleci tests split --split-by=timings \
+            | circleci tests run \
+                --verbose \
+                --command="xargs -n 25 pnpm exec playwright test -c=playwright.ci.config.js"
           when: always
 
 jobs:
   setup-and-test:
-    executor: node-postgres
+    executor: node-playwright
     steps:
       - checkout
       - install-system-deps
+      - ensure-reporters
       - start-tests
 
-      # Store test results (XML format for CircleCI test summary)
+      # CircleCI expects a DIRECTORY here; it will find junit.xml inside.
       - store_test_results:
-          path: test-results/results.xml
+          path: test-results
 
-      # Store HTML report and other artifacts
-      - store_artifacts:
-          path: playwright-report
-          destination: playwright-report
-
-      # Store test results as artifacts as well
       - store_artifacts:
           path: test-results
           destination: test-results
+
+      - store_artifacts:
+          path: playwright-report
+          destination: playwright-report
 
 workflows:
   build-and-test:
