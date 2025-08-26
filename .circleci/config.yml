@@ -26,7 +26,7 @@ commands:
       - run:
           name: Run Playwright Tests (split + rerun-compatible)
           command: |
-            mkdir -p test-results
+            # mkdir -p test-results
             circleci tests glob "tests/**/*.{spec,test}.{js,jsx,ts,tsx}" \
             | circleci tests split --split-by=timings \
             | circleci tests run \
@@ -44,8 +44,7 @@ jobs:
 
       # CircleCI expects a DIRECTORY here; it will find junit.xml inside.
       - store_test_results:
-          # path: test-results
-          path: results.xml
+          path: test-results
 
       - store_artifacts:
           path: test-results
