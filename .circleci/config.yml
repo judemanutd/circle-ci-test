@@ -20,7 +20,6 @@ jobs:
           name: Install Playwright Browsers
           command: |
             npx playwright install --with-deps
-            npm install:browsers
 
       # Run Playwright tests with Circle CI test splitting
       - run:
