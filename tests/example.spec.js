@@ -20,11 +20,10 @@ test.describe("Example Tests", () => {
     ).toBeVisible();
   });
 
-  // This test always fails to demonstrate rerun failed tests functionality
-  // test('intentional failure for rerun demo', async ({ page }) => {
-  //   await page.goto('https://playwright.dev/');
+  test("intentional failure for rerun demo", async ({ page }) => {
+    await page.goto("https://playwright.dev/");
 
-  //   // This assertion will always fail to demonstrate rerun functionality
-  //   await expect(page).toHaveTitle('This Title Does Not Exist - Always Fails');
-  // });
+    // This assertion will always fail to demonstrate rerun functionality
+    await expect(page).toHaveTitle("This Title Does Not Exist - Always Fails");
+  });
 });
