@@ -10,21 +10,23 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      
+
       # Install dependencies
       - run:
           name: Install pnpm
-          command: npm install -g pnpm@8.15.0
-      
+          command: npm install -g pnpm
+
       - run:
           name: Install dependencies
-          command: pnpm install
-      
+          command: pnpm install --frozen-lockfile
+
       # Install Playwright browsers
       - run:
           name: Install Playwright Browsers
-          command: npx playwright install --with-deps
-      
+          command: |
+            npx playwright install --with-deps
+            pnpm install:browsers
+
       # Run Playwright tests with Circle CI test splitting
       - run:
           name: Run Playwright Tests
@@ -34,16 +36,16 @@ jobs:
             echo "$TESTFILES" | circleci tests run --command="xargs pnpm playwright test --reporter=junit" --verbose --split-by=timings
           # Continue even if tests fail so we can collect artifacts
           when: always
-      
+
       # Store test results (XML format for CircleCI test summary)
       - store_test_results:
           path: test-results/results.xml
-      
+
       # Store HTML report and other artifacts
       - store_artifacts:
           path: playwright-report
           destination: playwright-report
-      
+
       # Store test results as artifacts as well
       - store_artifacts:
           path: test-results
